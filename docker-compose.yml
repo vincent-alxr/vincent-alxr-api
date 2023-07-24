@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  # Service pour le conteneur de votre application Rust
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"  # Port de l'application dans le conteneur : Port de l'application sur la machine hôte
+    depends_on:
+      - db  # Le service "votre_application" dépend du service "db" (PostgreSQL)
+    networks:
+      - portfolio-network
+  # Service pour le conteneur PostgreSQL
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: portfolio_api  # Remplacez "votre_utilisateur" par le nom d'utilisateur souhaité pour la base de données PostgreSQL
+      POSTGRES_PASSWORD: portfolio_api_pwd  # Remplacez "votre_mot_de_passe" par le mot de passe souhaité pour l'utilisateur PostgreSQL
+      POSTGRES_DB: portfolio_api  # Remplacez "votre_base_de_donnees" par le nom de la base de données souhaité
+    ports:
+      - "5432:5432"  # Port de PostgreSQL dans le conteneur : Port de PostgreSQL sur la machine hôte
+    networks:
+      - portfolio-network
+
+networks:
+  portfolio-network:
